@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Develop — AI Image Studio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@400;600;900&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+  <div class="app-shell">
+
+    <!-- LEFT SIDEBAR -->
+    <aside class="sidebar">
+      <div class="sidebar-top">
+        <span class="eyebrow">DEVELOP</span>
+      </div>
+
+      <div class="sidebar-section-label">HISTORY</div>
+      <div class="history-list" id="historyList">
+        <div class="history-empty" id="historyEmpty">No prints yet</div>
+      </div>
+
+      <div class="sidebar-bottom">
+        <span class="username">{{ current_user.username }}</span>
+        <a href="{{ url_for('logout') }}" class="logout-link">Log out</a>
+      </div>
+    </aside>
+
+    <!-- MAIN AREA -->
+    <main class="main-area">
+      <div class="bulb"></div>
+
+      <div class="input-dock">
+        <span id="statusText" class="status">input</span>
+        <div class="input-bar">
+          <textarea id="prompt" placeholder="Write a prompt"></textarea>
+          <button id="generateBtn" class="arrow-btn" aria-label="Generate image">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+              <path d="M12 19V5M5 12l7-7 7 7" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="canvas">
+        <div class="tray" id="tray">
+          <div class="tray-empty" id="trayEmpty">
+            <span>the print will appear here</span>
+          </div>
+          <div class="print" id="print" hidden>
+            <div class="scanline" id="scanline"></div>
+            <img id="resultImage" src="" alt="Generated image" />
+          </div>
+        </div>
+
+        <div class="tray-actions" id="trayActions" hidden>
+          <a id="downloadBtn" class="ghost-btn" download="generated-image.jpg">Save print</a>
+        </div>
+      </div>
+    </main>
+
+  </div>
+
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
