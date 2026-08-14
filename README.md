@@ -1,79 +1,93 @@
 # Develop — AI Image Generator
 
-A full-stack web app that turns text prompts into AI-generated images, with user accounts and a saved generation history — built with Flask and a custom darkroom-inspired interface.
+A full-stack web app that turns text prompts into AI-generated images. Built with Flask, has user accounts, and keeps a history of everything you've generated.
 
 ![Python](https://img.shields.io/badge/Python-3.12-blue)
 ![Flask](https://img.shields.io/badge/Flask-backend-black)
 ![SQLite](https://img.shields.io/badge/SQLite-database-lightgrey)
 
-## Features
-
-- **Text-to-image generation** — describe anything, get an AI-generated image back in seconds
-- **User authentication** — secure register, login, and logout with hashed passwords
-- **Generation history** — every image you create is saved to your account and shown in a sidebar for quick access
-- **Custom interface** — a dark, amber-lit "darkroom" aesthetic with a print-developing animation on every generation
-- **Responsive prompt bar** — chat-style input with an inline generate button and auto-resizing textarea
-
-## Tech Stack
-
-| Layer | Technology |
+## What it does
+- Type a prompt, get an AI-generated image back in a few seconds
+- Create an account and log in / log out (passwords are hashed, never stored as plain text)
+- Every image you generate gets saved to your account and shows up in a sidebar so you can find it again
+- A dark, amber-toned interface with a small "developing" animation when an image loads
+- The prompt bar works like a chat input — type, hit enter or the arrow button, done
+## Built with
+| Part | What's used |
 |---|---|
 | Backend | Python, Flask |
-| Database | SQLite via Flask-SQLAlchemy |
-| Auth | Flask-Login, Werkzeug password hashing |
-| Image generation | Pollinations.ai API |
-| Frontend | HTML, CSS, vanilla JavaScript |
-
-## How It Works
-
-1. User registers or logs in — session managed by Flask-Login
-2. User types a prompt in the input bar and hits the arrow button (or Enter)
-3. Flask backend sends the prompt to the Pollinations image API
-4. The generated image URL is saved to the database, tied to the logged-in user
-5. The image renders in the main view with a develop-style reveal animation
-6. Past generations appear instantly in the left sidebar, and can be reopened with a click
-
-## Project Structure
+| Database | SQLite (through Flask-SQLAlchemy) |
+| Login system | Flask-Login, password hashing via Werkzeug |
+| Image generation | Pollinations.ai |
+| Frontend | HTML, CSS, plain JavaScript (no frameworks) |
+| Tests | Pytest |
+## How it works
+1. You register or log in — Flask-Login handles keeping you signed in
+2. You type a prompt and submit it
+3. The backend sends that prompt to the Pollinations API
+4. The image URL comes back and gets saved to the database under your account
+5. It shows up in the main view, and also gets added to your history sidebar
+6. Click any past item in the sidebar to pull that image back up
+## Project structure
 ai-image-gen/
-├── app.py # Flask app, routes, auth logic
-├── models.py # Database models (User, Generation)
+├── app.py — routes, login logic, main app setup
+├── models.py — database tables (User, Generation)
+├── test_app.py — automated tests (pytest)
 ├── requirements.txt
+├── .env — secret key + API key (not committed to git)
 ├── templates/
-│ ├── index.html # Main dashboard
+│ ├── index.html — main dashboard
 │ ├── login.html
 │ └── register.html
 └── static/
-├── style.css # Main dashboard styling
-├── auth.css # Login/register page styling
-└── script.js # Frontend logic (fetch, history, animations)
-## Running Locally
+├── style.css — main dashboard styling
+├── auth.css — login/register page styling
+└── script.js — handles requests, history, animations
+## Running it locally
 
-\`\`\`bash
-# Clone the repository
-git clone https://github.com/your-username/ai-image-gen.git
+```bash
+git clone https://github.com/SHOAIB8788/ai-image-gen.git
 cd ai-image-gen
 
-# Create and activate a virtual environment
 python -m venv venv
 venv\Scripts\activate        # Windows
 source venv/bin/activate     # Mac/Linux
 
-# Install dependencies
 pip install -r requirements.txt
+```
+You'll also need a `.env` file in the project root with:
+Generate one with:
+```bash
+python -c "import secrets; print(secrets.token_hex(32))"
+```
 
-# Run the app
+Then run it:
+```bash
 python app.py
-\`\`\`
+```
+and open `http://127.0.0.1:5000`.
 
-Then open `http://127.0.0.1:5000` in your browser.
+## Running the tests
 
-## Future Improvements
+```bash
+pytest test_app.py -v
+```
+Covers password hashing, signing up, logging in, and making sure the dashboard is only reachable when logged in.
 
-- Ability to delete individual history items
-- Downloadable image gallery / bulk export
-- Support for multiple image styles or aspect ratios
-- Deploy to a live hosting platform
+## Security notes
 
-## Author
+A few things worth mentioning since this started as a learning project and got cleaned up along the way:
+- Passwords are hashed with Werkzeug's `generate_password_hash` (scrypt + a random salt per user) — never stored as plain text
+- The Flask `SECRET_KEY` is generated randomly and loaded from `.env`, not hardcoded
+- `.env` and the local database file are both excluded from git via `.gitignore`
 
-Built by [SHOAIB8788] as a learning project to practice full-stack development — Flask backend, REST API integration, authentication, and frontend design.
+## Ideas for later
+
+- Delete individual items from history
+- Download or export multiple images at once
+- More image styles / aspect ratio options
+- Actually deploy it somewhere instead of just running locally
+
+## About
+
+Made by SHOAIB8788 — a project for practicing Flask, basic auth, working with an external API, and putting together a frontend from scratch.
