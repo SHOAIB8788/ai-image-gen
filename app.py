@@ -1,12 +1,14 @@
 import os
 import requests
+from dotenv import load_dotenv
+load_dotenv()
 from urllib.parse import quote
 from flask import Flask, request, jsonify, render_template, redirect, url_for, flash
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 from models import db, User, Generation
 
 app = Flask(__name__)
-app.config["SECRET_KEY"] = "change-this-to-something-random-later"
+app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///app.db"
 
 db.init_app(app)
